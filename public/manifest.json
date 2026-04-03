@@ -3,13 +3,13 @@
   "description": "Full-featured combat tracker with stat blocks, encounter builder, and health tracking.",
   "author": "Josiah",
   "version": "0.1.0",
-  "icon": "/icon.svg",
+  "icon": "https://obr-initiative-v2.vercel.app/icon.svg",
   "tokens": [],
   "action": {
     "title": "Initiative Tracker",
-    "icon": "/icon.svg",
+    "icon": "https://obr-initiative-v2.vercel.app/icon.svg",
     "popover": {
-      "url": "/",
+      "url": "https://obr-initiative-v2.vercel.app",
       "height": 600,
       "width": 340
     }
