@@ -9,10 +9,6 @@
   "action": {
     "title": "Initiative Tracker",
     "icon": "https://obr-initiative-v2.vercel.app/icon.svg",
-    "popover": {
-      "url": "https://obr-initiative-v2.vercel.app",
-      "height": 600,
-      "width": 340
-    }
+    "popover": "https://obr-initiative-v2.vercel.app"
   }
 }
