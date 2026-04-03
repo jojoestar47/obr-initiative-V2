@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Crossed swords icon -->
+  <rect width="64" height="64" rx="8" fill="#161410"/>
+  <!-- Sword 1 (top-left to bottom-right) -->
+  <line x1="12" y1="12" x2="52" y2="52" stroke="#c8922a" stroke-width="4" stroke-linecap="round"/>
+  <!-- Crossguard 1 -->
+  <line x1="20" y1="20" x2="28" y2="12" stroke="#c8922a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="20" y1="20" x2="12" y2="28" stroke="#c8922a" stroke-width="3" stroke-linecap="round"/>
+  <!-- Sword 2 (top-right to bottom-left) -->
+  <line x1="52" y1="12" x2="12" y2="52" stroke="#e8b44a" stroke-width="4" stroke-linecap="round"/>
+  <!-- Crossguard 2 -->
+  <line x1="44" y1="20" x2="52" y2="28" stroke="#e8b44a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="44" y1="20" x2="36" y2="12" stroke="#e8b44a" stroke-width="3" stroke-linecap="round"/>
+</svg>

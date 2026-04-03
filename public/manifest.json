@@ -1,0 +1,17 @@
+{
+  "name": "Initiative Tracker",
+  "description": "Full-featured combat tracker with stat blocks, encounter builder, and health tracking.",
+  "author": "Josiah",
+  "version": "0.1.0",
+  "icon": "/icon.svg",
+  "tokens": [],
+  "action": {
+    "title": "Initiative Tracker",
+    "icon": "/icon.svg",
+    "popover": {
+      "url": "/",
+      "height": 600,
+      "width": 340
+    }
+  }
+}
