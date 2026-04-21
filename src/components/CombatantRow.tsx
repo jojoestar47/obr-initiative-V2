@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Combatant, StatBlock } from "../types";
-import { hpPercent, hpColor, CONDITIONS } from "../utils";
+import { hpPercent, CONDITIONS } from "../utils";
 
 interface CombatantRowProps {
   combatant: Combatant;
@@ -32,30 +32,29 @@ export function CombatantRow({
   const [showStatBlock, setShowStatBlock] = useState(false);
 
   const pct = hpPercent(combatant.hp, combatant.maxHp);
-  const barColor = hpColor(pct);
-  const displayName =
-    combatant.count ? `${combatant.name} ${combatant.count}` : combatant.name;
+  const isDead = combatant.hp <= 0;
+  const displayName = combatant.count
+    ? `${combatant.name} ${combatant.count}`
+    : combatant.name;
+
+  const canSeeNumbers = isGM || combatant.isPlayer;
 
   const handleHpSubmit = () => {
     const val = parseInt(hpDelta);
-    if (!isNaN(val)) {
-      onAdjustHp(val);
-    }
+    if (!isNaN(val)) onAdjustHp(val);
     setHpDelta("");
   };
-
-  const isDead = combatant.hp <= 0;
 
   return (
     <div
       className={`combatant-row ${isActive ? "active" : ""} ${isDead ? "dead" : ""} ${combatant.isPlayer ? "is-player" : "is-monster"}`}
     >
-      {/* Active turn indicator */}
-      {isActive && <div className="active-pip" />}
+      {/* Turn indicator dot */}
+      <div className="turn-dot" />
 
-      {/* Initiative badge */}
+      {/* Initiative number */}
       <div
-        className="initiative-badge"
+        className="initiative-num"
         onClick={() => setEditingInit(true)}
         title="Click to edit initiative"
       >
@@ -76,52 +75,43 @@ export function CombatantRow({
             }}
           />
         ) : (
-          <span>{combatant.initiative}</span>
+          combatant.initiative
         )}
       </div>
 
-      {/* Main info */}
+      {/* Name + condition tags */}
       <div className="combatant-info" onClick={() => setExpanded(!expanded)}>
         <div className="combatant-name-row">
           <span className="combatant-name">{displayName}</span>
           {combatant.conditions.map((cond) => (
             <span
               key={cond.name}
-              className="condition-pip"
-              title={`${cond.name} — click to remove`}
+              className="condition-tag"
+              title="Click to remove"
               onClick={(e) => {
                 e.stopPropagation();
                 onRemoveCondition(cond.name);
               }}
             >
-              {cond.icon}
+              {cond.name}
             </span>
           ))}
         </div>
-
-        {/* HP bar — always visible; numbers shown for GM or player's own character */}
-        <div className="hp-bar-row">
-          <div className="hp-bar-track">
-            <div
-              className="hp-bar-fill"
-              style={{ width: `${pct}%`, background: barColor }}
-            />
-          </div>
-          {(isGM || combatant.isPlayer) && (
-            <span className="hp-text">
-              {combatant.hp}/{combatant.maxHp}
-            </span>
-          )}
-        </div>
       </div>
 
-      {/* AC — always visible so everyone knows what they're fighting */}
-      <div className="ac-badge" title="Armor Class">
-        <span className="ac-icon">🛡</span>
-        <span>{combatant.ac}</span>
+      {/* HP badge */}
+      <div className={`hp-badge ${pct < 50 ? "danger" : "neutral"}`}>
+        {canSeeNumbers
+          ? `${combatant.hp}/${combatant.maxHp}`
+          : pct < 50
+          ? "Low"
+          : ""}
       </div>
 
-      {/* Actions */}
+      {/* AC */}
+      <div className="ac-badge">AC {combatant.ac}</div>
+
+      {/* Action buttons */}
       <div className="combatant-actions">
         <button
           className="icon-btn"
@@ -136,7 +126,7 @@ export function CombatantRow({
         {isGM && (
           <button
             className="icon-btn danger"
-            title="Remove"
+            title="Remove from initiative"
             onClick={(e) => {
               e.stopPropagation();
               onRemove();
@@ -151,7 +141,7 @@ export function CombatantRow({
       {expanded && isGM && (
         <div className="combatant-expanded">
           <div className="hp-adjust-row">
-            <span className="expand-label">HP Adjust:</span>
+            <span className="expand-label">HP:</span>
             <button className="hp-btn heal" onClick={() => onAdjustHp(1)}>+1</button>
             <button className="hp-btn heal" onClick={() => onAdjustHp(5)}>+5</button>
             <button className="hp-btn damage" onClick={() => onAdjustHp(-1)}>-1</button>
@@ -161,7 +151,7 @@ export function CombatantRow({
               <input
                 className="hp-delta-input"
                 type="number"
-                placeholder="±value"
+                placeholder="+-val"
                 value={hpDelta}
                 onChange={(e) => setHpDelta(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleHpSubmit()}
@@ -178,7 +168,8 @@ export function CombatantRow({
                 defaultValue={combatant.maxHp}
                 onBlur={(e) => {
                   const val = parseInt(e.target.value);
-                  if (!isNaN(val)) onUpdate({ maxHp: val, hp: Math.min(combatant.hp, val) });
+                  if (!isNaN(val))
+                    onUpdate({ maxHp: val, hp: Math.min(combatant.hp, val) });
                 }}
               />
             </label>
@@ -221,32 +212,26 @@ export function CombatantRow({
             </button>
           )}
 
-          {showStatBlock && statBlock && (
-            <StatBlockMini statBlock={statBlock} />
-          )}
+          {showStatBlock && statBlock && <StatBlockMini statBlock={statBlock} />}
         </div>
       )}
 
       {/* Condition picker */}
       {showConditions && (
-        <div
-          className="condition-picker"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="condition-picker" onClick={(e) => e.stopPropagation()}>
           {CONDITIONS.map((cond) => {
             const active = combatant.conditions.find((c) => c.name === cond.name);
             return (
               <button
                 key={cond.name}
                 className={`condition-btn ${active ? "active" : ""}`}
-                title={cond.name}
                 onClick={() => {
                   if (active) onRemoveCondition(cond.name);
                   else onAddCondition(cond);
                   setShowConditions(false);
                 }}
               >
-                {cond.icon} {cond.name}
+                {cond.name}
               </button>
             );
           })}
@@ -261,13 +246,20 @@ function StatBlockMini({ statBlock }: { statBlock: StatBlock }) {
     <div className="statblock-mini">
       <div className="sb-mini-header">
         <strong>{statBlock.name}</strong>
-        <span>{statBlock.size} {statBlock.type}, {statBlock.alignment}</span>
+        <span>
+          {statBlock.size} {statBlock.type}, {statBlock.alignment}
+        </span>
       </div>
       <div className="sb-mini-row">
-        <span>AC {statBlock.ac}{statBlock.ac_source ? ` (${statBlock.ac_source})` : ""}</span>
-        <span>HP {statBlock.hp_average} ({statBlock.hp_formula})</span>
+        <span>
+          AC {statBlock.ac}
+          {statBlock.ac_source ? ` (${statBlock.ac_source})` : ""}
+        </span>
+        <span>
+          HP {statBlock.hp_average} ({statBlock.hp_formula})
+        </span>
       </div>
-      <div className="sb-mini-actions">
+      <div>
         {statBlock.actions.slice(0, 3).map((a) => (
           <div key={a.name} className="sb-mini-action">
             <strong>{a.name}.</strong> {a.desc}

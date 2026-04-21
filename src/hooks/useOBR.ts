@@ -115,20 +115,20 @@ export function useOBR(): UseOBRReturn {
         setTokens(itemsToTokens(items));
       });
 
-      // Register right-click context menu
+      // Register right-click context menu (OBR SDK v2: contextMenu.create)
       try {
-        (OBR.contextMenu as any).register({
+        await OBR.contextMenu.create({
           id: "obr-initiative-tracker/toggle",
           icons: [
             {
-              icon: "/icon.svg",
+              icon: `${window.location.origin}/icon.svg`,
               label: "Toggle Initiative",
               filter: {
                 every: [{ key: "layer", value: "CHARACTER" }],
               },
             },
           ],
-          onClick(context: any) {
+          onClick(context) {
             const clickedTokens = itemsToTokens(context.items as Item[]);
             for (const token of clickedTokens) {
               toggleTokenInInitiative(token);
@@ -136,7 +136,7 @@ export function useOBR(): UseOBRReturn {
           },
         });
       } catch (e) {
-        // Context menu registration may fail if already registered (hot reload)
+        // Already registered on hot reload — safe to ignore
         console.warn("Context menu registration skipped:", e);
       }
     });
