@@ -88,59 +88,38 @@ export function CombatantRow({
             <span
               key={cond.name}
               className="condition-pip"
-              title={cond.name}
+              title={`${cond.name} — click to remove`}
               onClick={(e) => {
                 e.stopPropagation();
                 onRemoveCondition(cond.name);
               }}
             >
-              {cond.name}
+              {cond.icon}
             </span>
           ))}
         </div>
 
-        {/* HP bar -- always visible, full info only for GM or players own character */}
-        {(isGM || combatant.isPlayer) && (
-          <div className="hp-bar-row">
-            <div className="hp-bar-track">
-              <div
-                className="hp-bar-fill"
-                style={{ width: `${pct}%`, background: barColor }}
-              />
-            </div>
-            {isGM && (
-              <span className="hp-text">
-                {combatant.hp}/{combatant.maxHp}
-              </span>
-            )}
-            {!isGM && combatant.isPlayer && (
-              <span className="hp-text">
-                {combatant.hp}/{combatant.maxHp}
-              </span>
-            )}
+        {/* HP bar — always visible; numbers shown for GM or player's own character */}
+        <div className="hp-bar-row">
+          <div className="hp-bar-track">
+            <div
+              className="hp-bar-fill"
+              style={{ width: `${pct}%`, background: barColor }}
+            />
           </div>
-        )}
-
-        {/* Players see only a bar (no numbers) for monsters */}
-        {!isGM && !combatant.isPlayer && (
-          <div className="hp-bar-row">
-            <div className="hp-bar-track">
-              <div
-                className="hp-bar-fill"
-                style={{ width: `${pct}%`, background: barColor }}
-              />
-            </div>
-          </div>
-        )}
+          {(isGM || combatant.isPlayer) && (
+            <span className="hp-text">
+              {combatant.hp}/{combatant.maxHp}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* AC -- GM only for monsters */}
-      {(isGM || combatant.isPlayer) && (
-        <div className="ac-badge" title="Armor Class">
-          <span className="ac-icon">🛡</span>
-          <span>{combatant.ac}</span>
-        </div>
-      )}
+      {/* AC — always visible so everyone knows what they're fighting */}
+      <div className="ac-badge" title="Armor Class">
+        <span className="ac-icon">🛡</span>
+        <span>{combatant.ac}</span>
+      </div>
 
       {/* Actions */}
       <div className="combatant-actions">
@@ -267,7 +246,7 @@ export function CombatantRow({
                   setShowConditions(false);
                 }}
               >
-                {cond.name} {cond.name}
+                {cond.icon} {cond.name}
               </button>
             );
           })}

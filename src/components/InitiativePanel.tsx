@@ -207,11 +207,12 @@ export function InitiativePanel({ obr }: InitiativePanelProps) {
         {!isRunning ? (
           <>
             <button
-              className="btn btn-primary"
+              className="btn btn-primary btn-lg"
+              style={{ flex: 1 }}
               onClick={startCombat}
               disabled={combatants.length === 0}
             >
-              Begin Combat
+              ⚔️ Begin Combat
             </button>
             <button
               className="btn btn-ghost"
@@ -230,11 +231,15 @@ export function InitiativePanel({ obr }: InitiativePanelProps) {
           </>
         ) : (
           <>
-            <button className="btn btn-primary" onClick={nextTurn}>
+            <button
+              className="btn btn-primary btn-lg"
+              style={{ flex: 1 }}
+              onClick={nextTurn}
+            >
               Next Turn ›
             </button>
             <button className="btn btn-ghost btn-danger" onClick={endCombat}>
-              End Combat
+              End
             </button>
           </>
         )}

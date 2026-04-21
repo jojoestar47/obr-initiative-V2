@@ -6,10 +6,10 @@ import { StatBlockPanel } from "./components/StatBlockPanel";
 import { AppTab } from "./types";
 import "./styles.css";
 
-const TABS: { id: AppTab; label: string }[] = [
-  { id: "initiative", label: "Combat" },
-  { id: "encounters", label: "Encounters" },
-  { id: "statblocks", label: "Bestiary" },
+const TABS: { id: AppTab; label: string; icon: string }[] = [
+  { id: "initiative", label: "Combat", icon: "⚔️" },
+  { id: "encounters", label: "Encounters", icon: "📜" },
+  { id: "statblocks", label: "Bestiary", icon: "📖" },
 ];
 
 export default function App() {
@@ -30,6 +30,7 @@ export default function App() {
               className={`tab-btn ${activeTab === tab.id ? "active" : ""}`}
               onClick={() => setActiveTab(tab.id)}
             >
+              <span className="tab-icon">{tab.icon}</span>
               {tab.label}
             </button>
           ))}
