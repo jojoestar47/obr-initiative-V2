@@ -212,7 +212,7 @@ export function InitiativePanel({ obr }: InitiativePanelProps) {
               onClick={startCombat}
               disabled={combatants.length === 0}
             >
-              ⚔️ Begin Combat
+              Begin Combat
             </button>
             <button
               className="btn btn-ghost"
